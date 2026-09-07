@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from './components/TopBar';
 import PipelineChevronNav from './components/PipelineChevronNav';
-import FarLeftNavStrip from './components/FarLeftNavStrip';
 import PipelineRail from './components/PipelineRail';
 import RightForensicPanel from './components/RightForensicPanel';
 import ForensicConsole from './components/ForensicConsole';
@@ -33,7 +32,6 @@ export default function App() {
   const [showSummary, setShowSummary] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [logs, setLogs] = useState([]);
-  const [farLeftTab, setFarLeftTab] = useState('timeline');
 
   useEffect(() => {
     async function initHealthCheck() {
@@ -205,6 +203,7 @@ export default function App() {
         onRunDemo={handleRunSampleDemo}
         isLoading={isLoading}
         onOpenSummary={() => setShowSummary(true)}
+        onOpenSettings={() => setShowSettings(true)}
         hasPipelineResult={Boolean(pipelineResult)}
       />
 
@@ -219,27 +218,6 @@ export default function App() {
 
       {/* 3. Main Multi-Column Workstation Body */}
       <div className="flex flex-1 overflow-hidden relative">
-        
-        {/* Far-Left Icon Navigation Strip */}
-        <FarLeftNavStrip
-          activeTab={farLeftTab}
-          onSelectTab={(tabId) => {
-            setFarLeftTab(tabId);
-            if (tabId === 'home') {
-              setActiveStageId(1);
-            } else if (tabId === 'timeline') {
-              setActiveStageId(1);
-            } else if (tabId === 'dossier') {
-              if (pipelineResult) {
-                setShowSummary(true);
-              } else {
-                handleRunSampleDemo().then(() => setShowSummary(true));
-              }
-            } else if (tabId === 'settings') {
-              setShowSettings(true);
-            }
-          }}
-        />
 
         {/* Left Forensic Pipeline Rail */}
         <PipelineRail

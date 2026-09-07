@@ -551,4 +551,38 @@
   animation: scannerSweep 1.2s ease-in-out infinite;
 }
 
+/* ============================================================
+   EVIDENCE NETWORK GRAPH ANIMATIONS
+   ============================================================ */
 
+/* Dashed marching-ants edges */
+@keyframes dash {
+  from { stroke-dashoffset: 20; }
+  to   { stroke-dashoffset: 0; }
+}
+.animate-dash {
+  stroke-dasharray: 4 3;
+  animation: dash 1.8s linear infinite;
+}
+
+/* Floating satellite nodes */
+@keyframes nodeFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+.animate-float {
+  animation: nodeFloat 3s ease-in-out infinite;
+}
+.animate-float-delayed {
+  animation: nodeFloat 3s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+/* Central node glow pulse */
+@keyframes nodeGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(16,185,129,0.4)); }
+  50%       { filter: drop-shadow(0 0 12px rgba(16,185,129,0.9)); }
+}
+.animate-pulse-glow {
+  animation: nodeGlow 2s ease-in-out infinite;
+}

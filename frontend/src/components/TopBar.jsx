@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Download } from 'lucide-react';
+import { Play, Download, Settings } from 'lucide-react';
 import VeriDexLogo from './VeriDexLogo';
 
 export default function TopBar({
@@ -9,6 +9,7 @@ export default function TopBar({
   onRunDemo,
   isLoading,
   onOpenSummary,
+  onOpenSettings,
   hasPipelineResult,
 }) {
   const handleExportClick = () => {
@@ -54,6 +55,15 @@ export default function TopBar({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
+          {/* Settings Button */}
+          <button
+            onClick={onOpenSettings}
+            title="System Settings & Diagnostics"
+            className="p-2 rounded-xl bg-gradient-to-b from-[#1A1A22] to-[#0E0E14] hover:from-[#242430] hover:to-[#161620] border border-white/10 hover:border-white/25 text-zinc-400 hover:text-white transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-90 group"
+          >
+            <Settings className="w-3.5 h-3.5 transition-transform duration-500 group-hover:rotate-90" />
+          </button>
+
           {/* Tactile Export Dossier Button */}
           <button
             onClick={handleExportClick}
