@@ -11,10 +11,14 @@ export default function FarLeftNavStrip({ activeTab = 'timeline', onSelectTab })
 
   return (
     <aside className="w-12 bg-[#08080B] border-r border-[#1E1E24] flex flex-col items-center py-3 gap-3 shrink-0 z-30 select-none">
-      {/* Top Brand Mark */}
-      <div className="w-7 h-7 rounded-lg bg-[#38BDF8]/10 border border-[#38BDF8]/30 flex items-center justify-center text-[#38BDF8] mb-1">
+      {/* Top Brand Mark Button -> Redirects to Home / Stage 1 */}
+      <button
+        onClick={() => onSelectTab && onSelectTab('home')}
+        title="Return to Home / Evidence Ingestion"
+        className="w-7 h-7 rounded-lg bg-[#38BDF8]/10 hover:bg-[#38BDF8]/20 border border-[#38BDF8]/30 flex items-center justify-center text-[#38BDF8] mb-1 transition-all duration-200 cursor-pointer hover:scale-105"
+      >
         <VeriDexLogo size={18} />
-      </div>
+      </button>
 
       {/* Minimalist Nav Items */}
       <div className="flex flex-col items-center gap-2 flex-1 w-full px-1">
@@ -28,7 +32,7 @@ export default function FarLeftNavStrip({ activeTab = 'timeline', onSelectTab })
               title={item.label}
               className={`group relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-[#181820] text-[#38BDF8] border border-[#38BDF8]/40'
+                  ? 'bg-[#181820] text-[#38BDF8] border border-[#38BDF8]/40 shadow-[0_0_8px_rgba(56,189,248,0.2)]'
                   : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/5'
               }`}
             >
@@ -46,11 +50,16 @@ export default function FarLeftNavStrip({ activeTab = 'timeline', onSelectTab })
         })}
       </div>
 
-      {/* Minimal Badge */}
-      <div className="w-6 h-6 rounded-md bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 text-[9px] font-mono font-bold">
+      {/* Minimal Footer Badge Button -> Redirects to GitHub Repository */}
+      <button
+        onClick={() => window.open('https://github.com/DropOutsCore/VeriDex_hhgt3', '_blank')}
+        title="Open GitHub Repository (DropOutsCore/VeriDex_hhgt3)"
+        className="w-6 h-6 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white text-[9px] font-mono font-bold transition-all duration-200 cursor-pointer"
+      >
         VX
-      </div>
+      </button>
     </aside>
   );
 }
+
 
