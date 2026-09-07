@@ -17,7 +17,8 @@ export default function Stage7ChainAnchor({ blockchainData }) {
   const contractAddress = blockchainData?.contract_address || '0xA7F56AE142C114fCA9bC0386CdD693e665ADF101';
   const txHash = blockchainData?.transaction_hash || '0x8f2b7194819c9284ba0182746193850182947192847192847192847192847192';
   const blockNumber = blockchainData?.block_number || '12849102';
-  const explorerUrl = `https://amoy.polygonscan.com/tx/${txHash}`;
+  // Link to contract address page (always resolves) — tx hash is deterministic/simulated so we show the registry contract
+  const contractExplorerUrl = `https://amoy.polygonscan.com/address/${contractAddress}`;
   const rawCallData = '0x4d28e7104f8a1290bb0194821a71928471b02847192847192847192847192847190000000000000000000000000000000000000000000000000000000066dcde80';
 
   const handleCopyTx = () => {
@@ -154,15 +155,17 @@ export default function Stage7ChainAnchor({ blockchainData }) {
           <span className="text-xs font-bold text-white uppercase tracking-wider">
             ON-CHAIN TRANSACTION RECEIPT
           </span>
-          <a
-            href={explorerUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] text-[#38BDF8] hover:underline flex items-center gap-1.5 font-bold cursor-pointer"
-          >
-            <span>VIEW ON POLYGONSCAN</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href={contractExplorerUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11px] text-[#38BDF8] hover:underline flex items-center gap-1.5 font-bold cursor-pointer"
+            >
+              <span>VIEW REGISTRY CONTRACT</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
 
         {/* Transaction Hash Box */}
