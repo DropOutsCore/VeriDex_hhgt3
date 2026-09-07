@@ -272,6 +272,7 @@ export default function App() {
           pipelineResult={pipelineResult}
           onTamperStateChange={setIsTampered}
           isTampered={isTampered}
+          activeStageId={activeStageId}
         />
 
       </div>
