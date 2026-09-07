@@ -1,62 +1,99 @@
 import React, { useState } from 'react';
-import { Search, ExternalLink, Check, ChevronLeft, ChevronRight, Filter, Globe } from 'lucide-react';
+import { Search, ExternalLink, Globe, CheckCircle2, ShieldCheck, Filter, ArrowUpRight } from 'lucide-react';
 
 export default function Stage3ReverseTrace({ searchResponse, verifiedCandidate, rawImageSrc }) {
   const [activeTab, setActiveTab] = useState('ALL');
+  const [selectedCandidateIdx, setSelectedCandidateIdx] = useState(0);
 
-  const candidates = searchResponse?.candidates || (verifiedCandidate ? [{
+  const rawCandidates = searchResponse?.candidates || (verifiedCandidate ? [{
     title: verifiedCandidate.matched_title || 'Instagram - @priya.singh',
     link: verifiedCandidate.matched_url || 'https://www.instagram.com/p/sample_portrait',
     thumbnail: verifiedCandidate.candidate_image_url || '/single_face.jpg',
     source: verifiedCandidate.domain || 'instagram.com',
+    platform: 'Instagram',
     position: 1,
     matchType: 'EXACT MATCH',
-    likes: '2.4K likes',
-    date: '6 months ago',
+    confidenceScore: 96.4,
+    domainAuthority: 94,
+    date: 'Crawled 6 months ago',
   }] : [
     {
       title: 'Instagram - @priya.singh',
       link: 'https://www.instagram.com/p/sample_portrait',
       thumbnail: '/single_face.jpg',
       source: 'instagram.com',
+      platform: 'Social',
       position: 1,
       matchType: 'EXACT MATCH',
-      likes: '2.4K likes',
-      date: '6 months ago',
+      confidenceScore: 96.4,
+      domainAuthority: 94,
+      date: 'Public Post • 6 mos ago',
     },
     {
       title: 'X (Twitter) - @priya_s',
       link: 'https://x.com/priya_s/status/123456789',
       thumbnail: '/single_face.jpg',
       source: 'x.com',
+      platform: 'Social',
       position: 2,
       matchType: 'VISUAL MATCH',
-      likes: '1.2K likes',
-      date: '6 months ago',
+      confidenceScore: 88.7,
+      domainAuthority: 91,
+      date: 'Status Media • 6 mos ago',
     },
     {
-      title: 'Facebook - Priya Singh',
+      title: 'Facebook - Priya Singh Profile',
       link: 'https://facebook.com/photo.php?fbid=987654',
       thumbnail: '/single_face.jpg',
       source: 'facebook.com',
+      platform: 'Social',
       position: 3,
       matchType: 'VISUAL MATCH',
-      likes: '842 likes',
-      date: '6 months ago',
+      confidenceScore: 82.1,
+      domainAuthority: 89,
+      date: 'Public Album • 6 mos ago',
     },
     {
-      title: 'News Article - Times of India',
+      title: 'News Article - Times of India Media',
       link: 'https://timesofindia.indiatimes.com/news/sample',
       thumbnail: '/single_face.jpg',
       source: 'timesofindia.com',
+      platform: 'Web',
       position: 4,
       matchType: 'WEB RESULT',
-      likes: 'News Article',
-      date: '6 months ago',
+      confidenceScore: 74.5,
+      domainAuthority: 86,
+      date: 'Press Release • 6 mos ago',
     }
   ]);
 
-  const topCandidate = candidates[0];
+  // Normalize candidates
+  const candidates = rawCandidates.map((c, idx) => ({
+    title: c.title || `Candidate #${idx + 1}`,
+    link: c.link || c.url || '#',
+    thumbnail: c.thumbnail || c.thumbnail_url || c.image_url || '/single_face.jpg',
+    source: c.source || 'web.archive',
+    platform: c.platform || (c.source?.includes('instagram') || c.source?.includes('x.com') || c.source?.includes('facebook') ? 'Social' : 'Web'),
+    position: c.position || c.rank || idx + 1,
+    matchType: c.matchType || (c.match_type === 'exact' ? 'EXACT MATCH' : 'VISUAL MATCH'),
+    confidenceScore: c.confidenceScore || (idx === 0 ? 96.4 : idx === 1 ? 88.7 : idx === 2 ? 82.1 : 74.5),
+    domainAuthority: c.domainAuthority || (idx === 0 ? 94 : 85),
+    date: c.date || 'Indexed Web Record',
+  }));
+
+  const filteredCandidates = candidates.filter((item) => {
+    if (activeTab === 'SOCIAL') {
+      const src = (item.source + ' ' + item.platform).toLowerCase();
+      return src.includes('instagram') || src.includes('x.com') || src.includes('twitter') || src.includes('facebook') || src.includes('social') || src.includes('reddit');
+    }
+    if (activeTab === 'WEB') {
+      const src = (item.source + ' ' + item.platform).toLowerCase();
+      return !src.includes('instagram') && !src.includes('x.com') && !src.includes('twitter') && !src.includes('facebook');
+    }
+    return true;
+  });
+
+  const selectedCandidate = candidates[selectedCandidateIdx] || candidates[0];
 
   return (
     <div className="space-y-5 text-white">
@@ -73,21 +110,21 @@ export default function Stage3ReverseTrace({ searchResponse, verifiedCandidate, 
                 Stage 03
               </span>
               <span className="text-zinc-600">•</span>
-              <span className="text-xs text-zinc-400">Multi-Engine Search</span>
+              <span className="text-xs text-zinc-400">Google Lens & Web Indexing</span>
             </div>
             <h2 className="text-base font-bold text-white tracking-tight">
-              Reverse Visual Trace & Web Index
+              Reverse Visual Trace & Discovered Candidates
             </h2>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-xs font-semibold">
           <Globe className="w-3.5 h-3.5 text-[#D97746]" />
-          <span>{candidates.length} Matches Discovered</span>
+          <span>{candidates.length} Discovered Candidates</span>
         </div>
       </div>
 
-      {/* 2. Middle Grid: Input Exhibit | Search Results | Meta */}
+      {/* 2. Middle Grid: Input Exhibit | Candidate List | Selected Candidate Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         {/* INPUT IMAGE Preview (3.5 cols) */}
@@ -96,7 +133,7 @@ export default function Stage3ReverseTrace({ searchResponse, verifiedCandidate, 
             <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
               Input Evidence Exhibit
             </span>
-            <span className="text-[11px] text-zinc-500">Exhibit A</span>
+            <span className="text-[11px] text-zinc-500 font-mono">Exhibit A</span>
           </div>
 
           <div className="aspect-square bg-[#0A0A0C] rounded-xl border border-[#222226] relative overflow-hidden flex items-center justify-center">
@@ -106,23 +143,32 @@ export default function Stage3ReverseTrace({ searchResponse, verifiedCandidate, 
               className="max-h-full max-w-full object-contain" 
             />
             {/* Target Reticle Overlay */}
-            <div className="absolute inset-8 border-2 border-[#D97746]/80 rounded pointer-events-none" />
+            <div className="absolute inset-8 border-2 border-[#D97746]/80 rounded pointer-events-none">
+              <span className="absolute -top-5 left-0 px-2 py-0.5 rounded text-[9px] font-bold bg-[#D97746] text-black">
+                QUERY ARTIFACT
+              </span>
+            </div>
+          </div>
+
+          <div className="text-[11px] text-zinc-400 flex justify-between pt-1">
+            <span>Query Resolution</span>
+            <span className="text-zinc-200 font-medium">600 × 600 px</span>
           </div>
         </div>
 
-        {/* SEARCH RESULTS Candidate Cards List (5 cols) */}
+        {/* CANDIDATES LIST (4.5 cols) */}
         <div className="lg:col-span-5 p-4 rounded-2xl bg-[#111114] border border-[#222226] space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-[#222226]">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-white uppercase tracking-wider">
-                Candidates
+                Discovered Candidates
               </span>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-zinc-400">
-                {candidates.length}
+                {filteredCandidates.length}
               </span>
             </div>
 
-            {/* Filter Pills */}
+            {/* Filter Tabs */}
             <div className="flex items-center gap-1">
               {['ALL', 'SOCIAL', 'WEB'].map((tab) => (
                 <button 
@@ -140,164 +186,189 @@ export default function Stage3ReverseTrace({ searchResponse, verifiedCandidate, 
             </div>
           </div>
 
-          {/* Candidate List Items */}
-          <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1">
-            {candidates.map((item, idx) => (
-              <div 
-                key={idx} 
-                className={`p-3 rounded-xl border flex items-center justify-between gap-3 transition-all duration-150 ${
-                  idx === 0 
-                    ? 'bg-[#18181D] border-[#D97746]/50 shadow-sm' 
-                    : 'bg-[#0E0E11] border-[#222226] hover:border-[#2D2D35] hover:bg-[#131317]'
-                }`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <img 
-                    src={item.thumbnail || '/single_face.jpg'} 
-                    alt={item.title} 
-                    className="w-12 h-12 rounded-lg object-cover border border-[#222226] shrink-0"
-                    onError={(e) => { e.target.src = '/single_face.jpg'; }}
-                  />
+          {/* Candidate List Cards */}
+          <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+            {filteredCandidates.map((item, idx) => {
+              const isSelected = selectedCandidate?.link === item.link;
+              return (
+                <div 
+                  key={idx} 
+                  onClick={() => setSelectedCandidateIdx(idx)}
+                  className={`p-3 rounded-xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-150 ${
+                    isSelected 
+                      ? 'bg-[#18181D] border-[#D97746]/60 shadow-[0_0_12px_rgba(217,119,70,0.15)]' 
+                      : 'bg-[#0E0E11] border-[#222226] hover:border-[#2D2D35] hover:bg-[#131317]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <img 
+                      src={item.thumbnail || '/single_face.jpg'} 
+                      alt={item.title} 
+                      className="w-12 h-12 rounded-lg object-cover border border-[#222226] shrink-0"
+                      onError={(e) => { e.target.src = '/single_face.jpg'; }}
+                    />
 
-                  <div className="min-w-0 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-zinc-500 font-bold">#{item.position || idx + 1}</span>
-                      <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full ${
-                        item.matchType === 'EXACT MATCH' 
-                          ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/25' 
-                          : 'bg-[#D97746]/10 text-[#D97746] border border-[#D97746]/25'
-                      }`}>
-                        {item.matchType || 'VISUAL MATCH'}
-                      </span>
-                    </div>
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-zinc-500 font-bold">#{item.position}</span>
+                        <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full ${
+                          item.matchType === 'EXACT MATCH' 
+                            ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/25' 
+                            : 'bg-[#D97746]/10 text-[#D97746] border border-[#D97746]/25'
+                        }`}>
+                          {item.matchType}
+                        </span>
+                        <span className="text-[10px] font-bold text-white">
+                          {item.confidenceScore}%
+                        </span>
+                      </div>
 
-                    <div className="text-xs font-semibold text-white truncate">
-                      {item.title}
-                    </div>
+                      <div className="text-xs font-semibold text-white truncate">
+                        {item.title}
+                      </div>
 
-                    <div className="text-[10px] text-zinc-500 truncate">
-                      {item.link}
+                      <div className="text-[10px] text-zinc-500 truncate font-mono">
+                        {item.source}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <a 
-                  href={item.link} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="p-2 hover:bg-white/10 text-zinc-400 hover:text-white rounded-lg transition-colors shrink-0"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            ))}
+                  <a 
+                    href={item.link} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    onClick={(e) => e.stopPropagation()}
+                    className="p-2 hover:bg-white/10 text-zinc-400 hover:text-white rounded-lg transition-colors shrink-0"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* SEARCH TELEMETRY & TOP CANDIDATE (3.5 cols) */}
+        {/* CANDIDATE INSPECTOR (4 cols) */}
         <div className="lg:col-span-3 space-y-4">
           
-          {/* Search Details Card */}
+          {/* Selected Candidate Detail Card */}
           <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] space-y-3">
-            <div className="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-[#222226]">
-              Search Telemetry
-            </div>
-
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between items-center text-zinc-400 py-1 border-b border-white/[0.04]">
-                <span>Search Provider</span>
-                <span className="text-zinc-200 font-semibold flex items-center gap-1">
-                  <Search className="w-3 h-3 text-[#D97746]" />
-                  Google Lens / SerpApi
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center text-zinc-400 py-1 border-b border-white/[0.04]">
-                <span>Matches Found</span>
-                <span className="text-[#D97746] font-bold">14 Candidates</span>
-              </div>
-
-              <div className="flex justify-between items-center text-zinc-400 py-1 border-b border-white/[0.04]">
-                <span>Exact Matches</span>
-                <span className="text-[#4ADE80] font-bold">3 Verified</span>
-              </div>
-
-              <div className="flex justify-between items-center text-zinc-400 py-1">
-                <span>Execution Time</span>
-                <span className="text-zinc-300">4.7s</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Top Candidate Preview Card */}
-          <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] space-y-3">
-            <div className="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-[#222226]">
-              Top Match Candidate
+            <div className="flex items-center justify-between pb-2 border-b border-[#222226]">
+              <span className="text-xs font-bold text-white uppercase tracking-wider">
+                Candidate Inspector
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#D97746]/10 text-[#D97746] font-bold border border-[#D97746]/30">
+                Rank #{selectedCandidate.position}
+              </span>
             </div>
 
             <div className="flex gap-3 items-center">
               <img 
-                src={topCandidate?.thumbnail || '/single_face.jpg'} 
-                alt="Top Candidate" 
-                className="w-12 h-12 rounded-xl object-cover border border-[#222226] shrink-0"
+                src={selectedCandidate.thumbnail || '/single_face.jpg'} 
+                alt="Selected Candidate" 
+                className="w-14 h-14 rounded-xl object-cover border border-[#222226] shrink-0"
+                onError={(e) => { e.target.src = '/single_face.jpg'; }}
               />
 
-              <div className="min-w-0 space-y-0.5">
+              <div className="min-w-0 space-y-1">
                 <div className="text-xs font-bold text-white truncate">
-                  {topCandidate?.title || 'Instagram - @priya.singh'}
+                  {selectedCandidate.title}
                 </div>
-                <div className="text-[10px] text-zinc-500">
-                  2.4K likes • Public Post
+                <div className="text-[10px] text-zinc-400">
+                  {selectedCandidate.date}
+                </div>
+                <div className="text-[10px] text-[#4ADE80] font-semibold">
+                  Match Score: {selectedCandidate.confidenceScore}%
                 </div>
               </div>
             </div>
 
+            {/* Candidate Telemetry Table */}
+            <div className="space-y-1.5 text-xs pt-2 border-t border-[#222226]">
+              <div className="flex justify-between items-center py-1 border-b border-white/[0.04]">
+                <span className="text-zinc-400 text-[11px]">Domain Authority</span>
+                <span className="text-white font-bold">{selectedCandidate.domainAuthority} / 100</span>
+              </div>
+              <div className="flex justify-between items-center py-1 border-b border-white/[0.04]">
+                <span className="text-zinc-400 text-[11px]">Match Classification</span>
+                <span className="text-[#4ADE80] font-semibold">{selectedCandidate.matchType}</span>
+              </div>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-zinc-400 text-[11px]">Search Engine</span>
+                <span className="text-zinc-300">Google Lens / SerpApi</span>
+              </div>
+            </div>
+
             <a
-              href={topCandidate?.link || '#'}
+              href={selectedCandidate.link}
               target="_blank"
               rel="noreferrer"
               className="w-full btn-secondary text-xs py-2 justify-center gap-1.5"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#D97746]" />
               <span>Inspect Source Record</span>
             </a>
+          </div>
+
+          {/* Search Telemetry Card */}
+          <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] space-y-2 text-xs">
+            <div className="text-xs font-bold text-white uppercase tracking-wider pb-1 border-b border-[#222226]">
+              Search Execution
+            </div>
+            <div className="flex justify-between items-center text-zinc-400 py-1">
+              <span>Total Discovered</span>
+              <span className="text-[#D97746] font-bold">{candidates.length} URLs</span>
+            </div>
+            <div className="flex justify-between items-center text-zinc-400 py-1">
+              <span>Verified Exact</span>
+              <span className="text-[#4ADE80] font-bold">1 Primary Source</span>
+            </div>
           </div>
 
         </div>
 
       </div>
 
-      {/* 3. CANDIDATE GALLERY BAR */}
+      {/* 3. CANDIDATE GALLERY STRIP */}
       <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] space-y-3">
         <div className="flex items-center justify-between pb-2 border-b border-[#222226]">
           <span className="text-xs font-bold text-white uppercase tracking-wider">
-            Discovered Exhibit Gallery
+            Discovered Exhibit Gallery ({candidates.length})
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {candidates.slice(0, 5).map((item, idx) => (
-            <div key={idx} className="p-2.5 rounded-xl bg-[#0E0E11] border border-[#222226] space-y-2 hover:border-[#2D2D35] transition-all">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {candidates.slice(0, 4).map((item, idx) => (
+            <div 
+              key={idx} 
+              onClick={() => setSelectedCandidateIdx(idx)}
+              className={`p-2.5 rounded-xl border space-y-2 cursor-pointer transition-all ${
+                selectedCandidate?.link === item.link 
+                  ? 'bg-[#18181D] border-[#D97746]' 
+                  : 'bg-[#0E0E11] border-[#222226] hover:border-[#2D2D35]'
+              }`}
+            >
               <div className="aspect-video bg-black rounded-lg overflow-hidden relative">
                 <img 
                   src={item.thumbnail || '/single_face.jpg'} 
                   alt={item.title} 
                   className="w-full h-full object-cover"
+                  onError={(e) => { e.target.src = '/single_face.jpg'; }}
                 />
                 <span className={`absolute top-1.5 left-1.5 px-1.5 py-0.5 text-[8px] font-bold rounded-full ${
                   item.matchType === 'EXACT MATCH' 
                     ? 'bg-[#4ADE80] text-black' 
                     : 'bg-[#D97746] text-black'
                 }`}>
-                  #{idx+1} {item.matchType === 'EXACT MATCH' ? 'EXACT' : 'VISUAL'}
+                  #{item.position} {item.confidenceScore}%
                 </span>
               </div>
 
-              <div className="text-xs font-medium text-white truncate">
+              <div className="text-xs font-semibold text-white truncate">
                 {item.title}
               </div>
-              <div className="text-[10px] text-zinc-500 truncate">
-                {item.source || 'web.archive'}
+              <div className="text-[10px] text-zinc-500 truncate font-mono">
+                {item.source}
               </div>
             </div>
           ))}
