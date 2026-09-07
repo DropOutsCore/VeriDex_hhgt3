@@ -1,25 +1,14 @@
 import React from 'react';
-import {
-  Scan,
-  Fingerprint,
-  Globe,
-  GitCompare,
-  Gauge,
-  Binary,
-  Link2,
-  ShieldCheck,
-  Check,
-} from 'lucide-react';
 
 export const PIPELINE_CHEVRONS = [
-  { id: 1, key: 'SCAN', label: '1. SCAN', icon: Scan, anim: 'group-hover:scale-110 group-hover:rotate-6' },
-  { id: 2, key: 'SIGNATURE', label: '2. SIGNATURE', icon: Fingerprint, anim: 'group-hover:scale-110 group-hover:-translate-y-0.5' },
-  { id: 3, key: 'TRACE', label: '3. REVERSE TRACE', icon: Globe, anim: 'group-hover:rotate-45 duration-500' },
-  { id: 4, key: 'CORRELATION', label: '4. CORRELATION', icon: GitCompare, anim: 'group-hover:scale-110 group-hover:rotate-12' },
-  { id: 5, key: 'EVIDENCE', label: '5. SCORE', icon: Gauge, anim: 'group-hover:-rotate-12 group-hover:scale-110' },
-  { id: 6, key: 'FINGERPRINT', label: '6. FINGERPRINT', icon: Binary, anim: 'group-hover:scale-110 group-hover:translate-x-0.5' },
-  { id: 7, key: 'CHAIN', label: '7. BLOCKCHAIN', icon: Link2, anim: 'group-hover:rotate-45 group-hover:scale-110' },
-  { id: 8, key: 'PROOF', label: '8. INTEGRITY', icon: ShieldCheck, anim: 'group-hover:scale-115' },
+  { id: 1, key: 'SCAN', label: '1. SCAN' },
+  { id: 2, key: 'SIGNATURE', label: '2. FACE SIGNATURE' },
+  { id: 3, key: 'TRACE', label: '3. REVERSE TRACE' },
+  { id: 4, key: 'CORRELATION', label: '4. CANDIDATE CORRELATION' },
+  { id: 5, key: 'EVIDENCE', label: '5. EVIDENCE SCORE' },
+  { id: 6, key: 'FINGERPRINT', label: '6. VERIDEX FINGERPRINT' },
+  { id: 7, key: 'CHAIN', label: '7. BLOCKCHAIN ANCHOR' },
+  { id: 8, key: 'PROOF', label: '8. INTEGRITY VERIFICATION' },
 ];
 
 const STATUS_MAP = {
@@ -75,36 +64,30 @@ export default function PipelineChevronNav({
         </div>
       </div>
 
-      {/* Chevron Stepper Grid */}
-      <div className="flex items-center w-full overflow-x-auto scrollbar-none pt-0.5 pb-0.5 gap-1">
+      {/* Chevron Arrow Stepper Grid */}
+      <div className="flex items-center w-full overflow-x-auto scrollbar-none pt-0.5 pb-0.5">
         {PIPELINE_CHEVRONS.map((stage) => {
           const state = getStageState(stage.id);
           const isActiveView = activeStageId === stage.id;
-          const StageIcon = stage.icon;
 
-          let bgClasses = 'bg-gradient-to-b from-[#181820] to-[#101015] text-zinc-400 border border-white/[0.06] hover:border-white/20';
+          let bgClasses = 'bg-[#14141A] text-zinc-400';
           if (state === 'COMPLETED') {
-            bgClasses = 'bg-gradient-to-b from-[#059669] to-[#047857] text-white border border-[#10B981]/50 shadow-[0_2px_8px_rgba(5,150,105,0.3)]';
+            bgClasses = 'bg-[#059669] text-white';
           } else if (state === 'ACTIVE' || isActiveView) {
-            bgClasses = 'bg-gradient-to-b from-[#0284C7] to-[#0369A1] text-white font-bold border border-[#38BDF8]/60 shadow-[0_2px_10px_rgba(2,132,199,0.35)]';
+            bgClasses = 'bg-[#0284C7] text-white font-bold';
           } else if (state === 'TAMPERED' || state === 'FAILED') {
-            bgClasses = 'bg-gradient-to-b from-[#DC2626] to-[#B91C1C] text-white font-bold border border-[#F87171]/60 shadow-[0_2px_10px_rgba(220,38,38,0.35)]';
+            bgClasses = 'bg-[#DC2626] text-white font-bold';
           }
 
           return (
             <button
               key={stage.id}
               onClick={() => onSelectStage(stage.id)}
-              className={`group relative ${bgClasses} flex-1 min-w-[125px] py-1.5 px-2 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-95 active:translate-y-0.5`}
+              className={`chevron-nav-item ${bgClasses} flex-1 min-w-[125px] justify-center transition-all duration-200 hover:brightness-110 cursor-pointer`}
               title={`Jump to ${stage.label}`}
             >
-              <span className="truncate flex items-center gap-1.5 text-xs font-mono">
-                {state === 'COMPLETED' ? (
-                  <Check className="w-3.5 h-3.5 shrink-0 text-white stroke-[2.5]" />
-                ) : (
-                  <StageIcon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${stage.anim}`} />
-                )}
-                <span className="font-semibold">{stage.label}</span>
+              <span className="truncate">
+                {stage.label}
               </span>
             </button>
           );
