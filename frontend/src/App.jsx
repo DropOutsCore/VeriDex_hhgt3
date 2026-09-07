@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TopBar from './components/TopBar';
 import PipelineChevronNav from './components/PipelineChevronNav';
 import PipelineRail from './components/PipelineRail';
@@ -32,6 +32,7 @@ export default function App() {
   const [showSummary, setShowSummary] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [logs, setLogs] = useState([]);
+  const errorTimerRef = useRef(null);
 
   useEffect(() => {
     async function initHealthCheck() {
@@ -66,6 +67,22 @@ export default function App() {
     }]);
   };
 
+  const showError = (msg) => {
+    // User-friendly error mapping
+    let friendly = msg;
+    if (!msg || msg.includes('Pipeline request failed') || msg.includes('fetch')) {
+      friendly = 'Backend connection lost. Ensure the FastAPI server is running on port 8000.';
+    } else if (msg.includes('500') || msg.includes('Internal Server')) {
+      friendly = 'Server error during pipeline execution. Check backend logs.';
+    } else if (msg.includes('No human face')) {
+      friendly = 'No face detected in the uploaded image. Try a clear, well-lit portrait.';
+    }
+    setErrorMsg(friendly);
+    // Auto-dismiss after 6 seconds
+    if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    errorTimerRef.current = setTimeout(() => setErrorMsg(null), 6000);
+  };
+
   const handleImageUpload = async (file) => {
     if (!file) return;
     setIsLoading(true);
@@ -83,16 +100,17 @@ export default function App() {
       const res = await runPipeline(file, true);
       setPipelineResult(res);
       setCurrentStatus(res.status || 'VERIFIED');
+      setErrorMsg(null); // clear any previous error on success
 
       // Animate through all 8 stages sequentially so each stage lights up
-      const stageDelay = 350; // ms between each stage transition
+      const stageDelay = 350;
       for (let stage = 1; stage <= 8; stage++) {
         await new Promise(resolve => setTimeout(resolve, stageDelay));
         setActiveStageId(stage);
       }
     } catch (err) {
       console.error('Pipeline execution error:', err);
-      setErrorMsg(err.message || 'Pipeline execution failed.');
+      showError(err.message);
       setCurrentStatus('FAILED');
       addLog('FAILED', `Pipeline error: ${err.message}`);
     } finally {
@@ -115,7 +133,7 @@ export default function App() {
       await handleImageUpload(file);
     } catch (err) {
       console.error('Sample demo error:', err);
-      setErrorMsg(err.message || 'Sample demo failed.');
+      showError(err.message || 'Sample demo failed.');
       setCurrentStatus('FAILED');
       setIsLoading(false);
       addLog('FAILED', `Sample demo error: ${err.message}`);
@@ -260,9 +278,15 @@ export default function App() {
         <main className="flex-1 overflow-y-auto scrollbar-thin parallax-container flex flex-col p-5 gap-4">
           
           {errorMsg && (
-            <div className="p-3 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 text-[#F87171] text-xs flex items-center gap-2.5">
+            <div className="relative p-3 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 text-[#F87171] text-xs flex items-center gap-2.5 animate-[viewFadeIn_0.3s_ease] pr-8">
               <AlertCircle className="w-4 h-4 shrink-0 text-[#F87171]" />
               <span>{errorMsg}</span>
+              <button
+                onClick={() => setErrorMsg(null)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-white/10 text-[#F87171] cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
           )}
 
