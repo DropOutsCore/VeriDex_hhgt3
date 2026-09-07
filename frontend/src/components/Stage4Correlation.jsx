@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitCompare, Scan, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { GitCompare, Scan, CheckCircle2, ShieldAlert, Crosshair } from 'lucide-react';
 
 export default function Stage4Correlation({ verifiedCandidate, faceDetectionData, rawImageSrc }) {
   const faceSim = verifiedCandidate?.face_similarity !== undefined ? (verifiedCandidate.face_similarity * 100).toFixed(1) : '91.4';
@@ -7,6 +7,24 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
   const deltaVal = (100 - parseFloat(faceSim)).toFixed(1);
   const matchTitle = verifiedCandidate?.matched_title || 'Discovered Web Image Correspondence';
   const candidateUrl = verifiedCandidate?.candidate_image_url || '/single_face.jpg';
+
+  const lms = faceDetectionData?.faces?.[0]?.landmarks;
+  const imgW = faceDetectionData?.image_width || 600;
+  const imgH = faceDetectionData?.image_height || 600;
+
+  const lmPoints = lms ? {
+    rightEye:   { x: (lms.right_eye[0] / imgW) * 100,   y: (lms.right_eye[1] / imgH) * 100 },
+    leftEye:    { x: (lms.left_eye[0] / imgW) * 100,    y: (lms.left_eye[1] / imgH) * 100 },
+    noseTip:    { x: (lms.nose_tip[0] / imgW) * 100,    y: (lms.nose_tip[1] / imgH) * 100 },
+    rightMouth: { x: (lms.right_mouth[0] / imgW) * 100, y: (lms.right_mouth[1] / imgH) * 100 },
+    leftMouth:  { x: (lms.left_mouth[0] / imgW) * 100,  y: (lms.left_mouth[1] / imgH) * 100 },
+  } : {
+    rightEye:   { x: 38.5, y: 39.2 },
+    leftEye:    { x: 61.2, y: 38.8 },
+    noseTip:    { x: 50.1, y: 52.4 },
+    rightMouth: { x: 41.2, y: 65.8 },
+    leftMouth:  { x: 58.6, y: 65.4 },
+  };
 
   return (
     <div className="space-y-5 text-white">
@@ -26,7 +44,7 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
               <span className="text-xs text-zinc-400">Dual Exhibit Correlation</span>
             </div>
             <h2 className="text-base font-bold text-white tracking-tight">
-              Biometric Correspondence & Discrepancy Diff
+              Biometric Correspondence & Anatomical Feature Diff
             </h2>
           </div>
         </div>
@@ -63,13 +81,30 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
             {/* Overlay Box */}
             <div className="absolute inset-8 border-2 border-[#D97746] rounded pointer-events-none">
               <div className="absolute -top-5 left-0 bg-[#D97746] text-black px-1.5 py-0.5 text-[9px] font-bold rounded">
-                TARGET FACE
+                TARGET FACE #1
               </div>
+            </div>
+
+            {/* Landmark Pins Exhibit A */}
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.rightEye.x}%`, top: `${lmPoints.rightEye.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#D97746] border border-black shadow-[0_0_6px_#D97746]" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.leftEye.x}%`, top: `${lmPoints.leftEye.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#D97746] border border-black shadow-[0_0_6px_#D97746]" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.noseTip.x}%`, top: `${lmPoints.noseTip.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#D97746] border border-black shadow-[0_0_6px_#D97746]" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.rightMouth.x}%`, top: `${lmPoints.rightMouth.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.leftMouth.x}%`, top: `${lmPoints.leftMouth.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black" />
             </div>
           </div>
 
           <div className="text-[11px] text-zinc-400 flex justify-between pt-1">
-            <span>Sensor: SFace 128-D</span>
+            <span>Features: 5 Landmarks Tracked</span>
             <span>Target Payload</span>
           </div>
         </div>
@@ -110,6 +145,23 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
                 CANONICAL BASELINE
               </div>
             </div>
+
+            {/* Landmark Pins Exhibit B */}
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.rightEye.x}%`, top: `${lmPoints.rightEye.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black shadow-[0_0_6px_#4ADE80]" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.leftEye.x}%`, top: `${lmPoints.leftEye.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black shadow-[0_0_6px_#4ADE80]" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.noseTip.x}%`, top: `${lmPoints.noseTip.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black shadow-[0_0_6px_#4ADE80]" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.rightMouth.x}%`, top: `${lmPoints.rightMouth.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black" />
+            </div>
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ left: `${lmPoints.leftMouth.x}%`, top: `${lmPoints.leftMouth.y}%` }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4ADE80] border border-black" />
+            </div>
           </div>
 
           <div className="text-[11px] text-zinc-400 flex justify-between pt-1">
@@ -125,23 +177,23 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
         <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] text-center space-y-1">
           <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Face Correspondence</span>
           <div className="text-xl font-bold text-[#4ADE80]">{faceSim}%</div>
-          <span className="text-[11px] text-zinc-500">Cosine Distance</span>
+          <span className="text-[11px] text-zinc-500">Cosine Distance (SFace)</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] text-center space-y-1">
           <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">pHash Perceptual Parity</span>
           <div className="text-xl font-bold text-[#D97746]">{phashSim}%</div>
-          <span className="text-[11px] text-zinc-500">Hamming Distance</span>
+          <span className="text-[11px] text-zinc-500">DCT Frequency Parity</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] text-center space-y-1">
           <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Discrepancy Delta</span>
           <div className="text-xl font-bold text-white">Δ {deltaVal}%</div>
-          <span className="text-[11px] text-[#4ADE80]">Within Threshold</span>
+          <span className="text-[11px] text-[#4ADE80]">Within Tolerable Bounds</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-[#111114] border border-[#222226] text-center space-y-1">
-          <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Primary Rank</span>
+          <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Primary Web Rank</span>
           <div className="text-xl font-bold text-[#D97746]">#01 Candidate</div>
           <span className="text-[11px] text-zinc-400 truncate block">{matchTitle}</span>
         </div>

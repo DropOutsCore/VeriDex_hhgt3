@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
 /* ============================================================
    VERIDEX — NIVA DESIGN SYSTEM (https://niva.framer.website/)
@@ -147,7 +146,7 @@
   background: rgba(248, 113, 113, 0.08);
 }
 
-.badge-dim {
+.badge-dim, .badge-intel {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -162,11 +161,50 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Legacy maps */
-.badge-intel   { @apply badge-dim; }
-.badge-emerald { @apply badge-green; }
-.badge-cyan    { @apply badge-amber; }
-.badge-rose    { @apply badge-red; }
+.badge-emerald {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--green-hi);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.badge-cyan {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--amber);
+  border: 1px solid rgba(217, 119, 70, 0.3);
+  background: rgba(217, 119, 70, 0.1);
+}
+
+.badge-rose {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--red-hi);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  background: rgba(248, 113, 113, 0.08);
+}
 
 /* ============================================================
    PIPELINE STAGE ITEMS
