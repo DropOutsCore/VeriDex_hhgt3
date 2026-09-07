@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, ExternalLink, AlertTriangle, RotateCcw, Shield, CheckCircle2 } from 'lucide-react';
+import { Copy, Check, ExternalLink, AlertTriangle, RotateCcw, Shield, CheckCircle2, Eye, Fingerprint, Globe, Award } from 'lucide-react';
 import { simulateTampering, verifyChainIntegrity } from '../api';
 
 const METRIC_ROW = ({ label, value, valueColor }) => (
@@ -7,21 +7,24 @@ const METRIC_ROW = ({ label, value, valueColor }) => (
     <span className="text-zinc-400 text-[11px] font-medium">
       {label}
     </span>
-    <span className="font-semibold text-xs" style={{ color: valueColor || '#FFFFFF' }}>
+    <span className="font-semibold text-xs font-mono" style={{ color: valueColor || '#FFFFFF' }}>
       {value}
     </span>
   </div>
 );
 
-const SCORE_BAR = ({ label, pct, color = '#D97746' }) => (
+const SCORE_BAR = ({ label, pct, color = '#D97746', icon: Icon }) => (
   <div className="space-y-1.5 mb-2.5">
     <div className="flex justify-between items-center text-xs">
-      <span className="text-zinc-400 text-[11px] font-medium">{label}</span>
-      <span className="font-bold text-xs" style={{ color }}>{pct}%</span>
+      <span className="text-zinc-400 text-[11px] font-medium flex items-center gap-1.5">
+        {Icon && <Icon className="w-3.5 h-3.5 text-zinc-500 shrink-0" />}
+        <span>{label}</span>
+      </span>
+      <span className="font-bold text-xs font-mono" style={{ color }}>{pct}%</span>
     </div>
     <div className="h-1.5 bg-[#0C0C0E] border border-[#222226] rounded-full overflow-hidden">
       <div 
-        className="h-full rounded-full transition-all duration-500 ease-out" 
+        className="h-full rounded-full transition-all duration-500 ease-out shadow-sm" 
         style={{ 
           width: `${Math.min(100, Math.max(0, parseFloat(pct) || 0))}%`, 
           backgroundColor: color 
@@ -208,10 +211,10 @@ export default function RightForensicPanel({ pipelineResult, onTamperStateChange
 
       {/* SCORE BREAKDOWN */}
       <PANEL_CARD title="Correspondence Matrix" badge={`Stage 0${activeStageId}`}>
-        <SCORE_BAR label="Face Biometrics"   pct={faceScore}  color="#10B981" />
-        <SCORE_BAR label="Perceptual Hash"   pct={phashScore} color="#38BDF8" />
-        <SCORE_BAR label="Reverse Index"     pct={revScore}   color="#D97746" />
-        <SCORE_BAR label="Source Authority"  pct={srcScore}   color="#A1A1AA" />
+        <SCORE_BAR label="Face Biometrics"   pct={faceScore}  color="#10B981" icon={Eye} />
+        <SCORE_BAR label="Perceptual Hash"   pct={phashScore} color="#38BDF8" icon={Fingerprint} />
+        <SCORE_BAR label="Reverse Index"     pct={revScore}   color="#D97746" icon={Globe} />
+        <SCORE_BAR label="Source Authority"  pct={srcScore}   color="#A1A1AA" icon={Award} />
         
         <div className="mt-3 pt-2.5 border-t border-[#222226] flex justify-between items-center font-mono">
           <span className="text-zinc-400 text-xs font-medium">Confidence Score</span>
@@ -229,9 +232,13 @@ export default function RightForensicPanel({ pipelineResult, onTamperStateChange
           </div>
           <button
             onClick={handleCopy}
-            className="w-full btn-secondary text-xs py-1.5 justify-center gap-1.5"
+            className="group w-full py-2 px-3 rounded-xl bg-gradient-to-b from-[#181822] to-[#101016] hover:from-[#222230] hover:to-[#14141E] border border-white/10 hover:border-white/20 text-zinc-300 hover:text-white text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all active:scale-95 active:translate-y-0.5 cursor-pointer shadow-md"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-[#4ADE80]" /> : <Copy className="w-3.5 h-3.5 text-zinc-400" />}
+            {copied ? (
+              <Check className="w-3.5 h-3.5 text-[#4ADE80] animate-bounce" />
+            ) : (
+              <Copy className="w-3.5 h-3.5 text-zinc-400 transition-transform duration-200 group-hover:scale-110" />
+            )}
             <span>{copied ? 'Hash Copied' : 'Copy Hash Digest'}</span>
           </button>
         </PANEL_CARD>
@@ -293,18 +300,18 @@ export default function RightForensicPanel({ pipelineResult, onTamperStateChange
           <button
             onClick={handleSimulateTampering}
             disabled={isLoading}
-            className="w-full btn-danger justify-center gap-2 py-2 cursor-pointer"
+            className="group w-full py-2.5 px-3 rounded-xl bg-gradient-to-b from-[#7F1D1D]/50 to-[#450A0A]/70 hover:from-[#991B1B]/60 hover:to-[#5B0B0B]/80 text-[#FCA5A5] border border-[#DC2626]/40 hover:border-[#DC2626]/70 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 active:translate-y-0.5 cursor-pointer shadow-[0_2px_8px_rgba(220,38,38,0.25)]"
           >
-            <AlertTriangle className="w-3.5 h-3.5" />
+            <AlertTriangle className="w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-6" />
             <span>{isLoading ? 'Simulating Tamper...' : 'Simulate Evidence Tamper'}</span>
           </button>
         ) : (
           <button
             onClick={handleResetVerification}
             disabled={isLoading}
-            className="w-full btn-primary justify-center gap-2 py-2"
+            className="group w-full py-2.5 px-3 rounded-xl bg-gradient-to-b from-[#0284C7] to-[#0369A1] hover:from-[#0EA5E9] hover:to-[#0284C7] text-white border border-[#38BDF8]/50 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 active:translate-y-0.5 cursor-pointer shadow-[0_2px_10px_rgba(2,132,199,0.35)]"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5 transition-transform duration-500 group-hover:-rotate-180" />
             <span>Restore & Re-Verify</span>
           </button>
         )}

@@ -14,14 +14,14 @@ import {
 } from 'lucide-react';
 
 export const PIPELINE_STAGES = [
-  { id: 1, key: 'SCAN',        label: 'Face Scan',      icon: Scan,        desc: 'YuNet Detection'   },
-  { id: 2, key: 'SIGNATURE',   label: 'Signature',      icon: Fingerprint, desc: 'SFace 128-D'       },
-  { id: 3, key: 'TRACE',       label: 'Reverse Trace',  icon: Search,      desc: 'Google Lens'       },
-  { id: 4, key: 'CORRELATION', label: 'Correlation',    icon: GitCompare,  desc: 'Biometric + pHash' },
-  { id: 5, key: 'EVIDENCE',    label: 'Evidence Score', icon: BarChart3,   desc: 'Multi-Signal'      },
-  { id: 6, key: 'FINGERPRINT', label: 'Fingerprint',    icon: FileCode,    desc: 'RFC 8785 SHA-256'  },
-  { id: 7, key: 'CHAIN',       label: 'Ledger Anchor',  icon: Lock,        desc: 'Polygon Amoy'      },
-  { id: 8, key: 'PROOF',       label: 'Integrity',      icon: ShieldCheck, desc: 'Zero-Trust Audit'  },
+  { id: 1, key: 'SCAN',        label: 'Face Scan',      icon: Scan,        desc: 'YuNet Detection',   anim: 'group-hover:scale-110 group-hover:rotate-6' },
+  { id: 2, key: 'SIGNATURE',   label: 'Signature',      icon: Fingerprint, desc: 'SFace 128-D',       anim: 'group-hover:scale-110 group-hover:-translate-y-0.5' },
+  { id: 3, key: 'TRACE',       label: 'Reverse Trace',  icon: Search,      desc: 'Google Lens',       anim: 'group-hover:rotate-45 duration-500' },
+  { id: 4, key: 'CORRELATION', label: 'Correlation',    icon: GitCompare,  desc: 'Biometric + pHash', anim: 'group-hover:scale-110 group-hover:rotate-12' },
+  { id: 5, key: 'EVIDENCE',    label: 'Evidence Score', icon: BarChart3,   desc: 'Multi-Signal',      anim: 'group-hover:-rotate-12 group-hover:scale-110' },
+  { id: 6, key: 'FINGERPRINT', label: 'Fingerprint',    icon: FileCode,    desc: 'RFC 8785 SHA-256',  anim: 'group-hover:scale-110 group-hover:translate-x-0.5' },
+  { id: 7, key: 'CHAIN',       label: 'Ledger Anchor',  icon: Lock,        desc: 'Polygon Amoy',      anim: 'group-hover:rotate-45 group-hover:scale-110' },
+  { id: 8, key: 'PROOF',       label: 'Integrity',      icon: ShieldCheck, desc: 'Zero-Trust Audit',  anim: 'group-hover:scale-115' },
 ];
 
 const STATUS_MAP = {
@@ -104,7 +104,7 @@ export default function PipelineRail({
   };
 
   return (
-    <aside className="w-64 bg-[#0A0A0D] border-r border-[#222226] flex flex-col h-full shrink-0 overflow-y-auto">
+    <aside className="w-64 bg-[#0A0A0D] border-r border-[#222226] flex flex-col h-full shrink-0 overflow-y-auto select-none">
       {/* Header */}
       <div className="p-4 border-b border-[#222226]">
         <div className="flex items-center justify-between mb-1">
@@ -131,27 +131,27 @@ export default function PipelineRail({
             <button
               key={stage.id}
               onClick={() => onSelectStage(stage.id)}
-              className={`w-full text-left p-3 rounded-xl border transition-all duration-150 flex items-center justify-between gap-3 ${
+              className={`group w-full text-left p-2.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer active:scale-[0.98] ${
                 isActive
-                  ? 'bg-[#18181D] border-[#D97746]/50 shadow-sm'
-                  : 'bg-[#111114]/80 border-[#222226] hover:bg-[#16161B] hover:border-[#2D2D35]'
+                  ? 'bg-gradient-to-r from-[#1E1E26] to-[#14141C] border-[#D97746]/50 shadow-[0_2px_10px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)]'
+                  : 'bg-gradient-to-b from-[#111115] to-[#0D0D11] border-[#222226] hover:border-white/15 hover:bg-[#15151B]'
               }`}
             >
-              <div className="flex items-center gap-3 min-w-0">
-                {/* Number Pill / Indicator */}
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+              <div className="flex items-center gap-2.5 min-w-0">
+                {/* Tactile Icon Bezel */}
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-transform duration-200 ${
                   isActive
-                    ? 'bg-[#D97746]/15 text-[#D97746] border border-[#D97746]/30'
-                    : 'bg-white/5 text-zinc-400 border border-white/5'
+                    ? 'bg-gradient-to-b from-[#2A1E18] to-[#1C1410] text-[#D97746] border border-[#D97746]/40 shadow-inner'
+                    : 'bg-gradient-to-b from-[#181820] to-[#101014] text-zinc-400 border border-white/[0.06] group-hover:text-zinc-200'
                 }`}>
-                  {String(stage.id).padStart(2, '0')}
+                  <StageIcon className={`w-4 h-4 transition-transform duration-300 ${stage.anim || ''}`} />
                 </div>
 
                 <div className="min-w-0">
                   <div className={`text-xs font-semibold truncate ${isActive ? 'text-white' : 'text-zinc-300'}`}>
                     {stage.label}
                   </div>
-                  <div className="text-[10px] text-zinc-500 truncate">
+                  <div className="text-[10px] text-zinc-500 truncate font-mono">
                     {stage.desc}
                   </div>
                 </div>
