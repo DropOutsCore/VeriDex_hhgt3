@@ -2,11 +2,11 @@ import React from 'react';
 import { Lock, ExternalLink, CheckCircle2, ArrowRight, Database, FileCode } from 'lucide-react';
 
 export default function Stage7ChainAnchor({ blockchainData }) {
+  const isAnchored = Boolean(blockchainData && blockchainData.transaction_hash);
   const contractAddress = blockchainData?.contract_address || '0xA7F56AE142C114fCA9bC0386CdD693e665ADF101';
-  const txHash = blockchainData?.transaction_hash || '0x1e0b1c03ba329e9fb8bb8bcc2c5d87908002f23a2b5a7811cbda8b298d465d78';
-  const blockNumber = blockchainData?.block_number || '12849102';
-  const chainId = blockchainData?.chain_id || 80002;
-  const explorerUrl = `https://amoy.polygonscan.com/tx/${txHash}`;
+  const txHash = blockchainData?.transaction_hash || null;
+  const blockNumber = blockchainData?.block_number || null;
+  const explorerUrl = txHash ? `https://amoy.polygonscan.com/tx/${txHash}` : '#';
 
   return (
     <div className="max-w-4xl mx-auto space-y-5 text-white">
@@ -31,10 +31,17 @@ export default function Stage7ChainAnchor({ blockchainData }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4ADE80]/10 border border-[#4ADE80]/25 text-[#4ADE80] text-xs font-semibold">
-          <CheckCircle2 className="w-3.5 h-3.5" />
-          <span>Anchored On-Chain</span>
-        </div>
+        {isAnchored ? (
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4ADE80]/10 border border-[#4ADE80]/25 text-[#4ADE80] text-xs font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Anchored On-Chain</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold">
+            <Lock className="w-3.5 h-3.5" />
+            <span>Off-Chain Only (Anchoring Ready)</span>
+          </div>
+        )}
       </div>
 
       {/* Node Settlement Flow */}
@@ -99,28 +106,40 @@ export default function Stage7ChainAnchor({ blockchainData }) {
 
           <div className="flex flex-col sm:flex-row justify-between sm:items-center bg-[#0E0E11] p-3.5 rounded-xl border border-[#222226] gap-1">
             <span className="text-zinc-400">Transaction Hash</span>
-            <a 
-              href={explorerUrl} 
-              target="_blank" 
-              rel="noreferrer" 
-              className="text-[#D97746] hover:underline flex items-center gap-1.5 font-mono text-[11px] break-all"
-            >
-              <span>{txHash}</span>
-              <ExternalLink className="w-3.5 h-3.5 shrink-0" />
-            </a>
+            {txHash ? (
+              <a 
+                href={explorerUrl} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="text-[#D97746] hover:underline flex items-center gap-1.5 font-mono text-[11px] break-all"
+              >
+                <span>{txHash}</span>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+              </a>
+            ) : (
+              <span className="text-zinc-500 font-mono text-[11px]">Not Submitted (Requires PRIVATE_KEY in .env)</span>
+            )}
           </div>
 
           <div className="flex justify-between items-center bg-[#0E0E11] p-3.5 rounded-xl border border-[#222226]">
             <span className="text-zinc-400">Anchored Block Height</span>
-            <span className="text-[#4ADE80] font-bold">#{blockNumber}</span>
+            <span className={blockNumber ? "text-[#4ADE80] font-bold" : "text-zinc-500 font-mono"}>
+              {blockNumber ? `#${blockNumber}` : 'N/A'}
+            </span>
           </div>
 
           <div className="flex justify-between items-center bg-[#0E0E11] p-3.5 rounded-xl border border-[#222226]">
             <span className="text-zinc-400">Cryptographic Settlement</span>
-            <span className="text-[#4ADE80] font-bold flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-[#4ADE80]" />
-              <span>Confirmed On-Chain</span>
-            </span>
+            {isAnchored ? (
+              <span className="text-[#4ADE80] font-bold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#4ADE80]" />
+                <span>Confirmed On-Chain</span>
+              </span>
+            ) : (
+              <span className="text-amber-400 font-semibold text-xs">
+                Fingerprint Generated (Ready for On-Chain Anchor)
+              </span>
+            )}
           </div>
 
         </div>

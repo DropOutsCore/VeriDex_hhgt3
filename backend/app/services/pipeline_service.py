@@ -156,8 +156,10 @@ def execute_full_pipeline(
         _log_step(steps, PipelineStatus.DISCOVERING, "Normalizing, filtering, and ranking discovered web candidate sources.")
         result.status = PipelineStatus.DISCOVERING
 
-        # LensSearchResponse stores all candidates (both visual and exact) in .candidates
-        raw_candidates = search_res.candidates
+        # LensSearchResponse stores candidates in .candidates, or legacy .visual_matches / .exact_matches
+        raw_candidates = getattr(search_res, "candidates", None)
+        if not isinstance(raw_candidates, list) or len(raw_candidates) == 0:
+            raw_candidates = (getattr(search_res, "exact_matches", None) or []) + (getattr(search_res, "visual_matches", None) or [])
         normalized = normalize_candidates(raw_candidates)
         filtered = filter_candidates(normalized)
         ranked_candidates = rank_candidates(filtered)
@@ -269,32 +271,16 @@ def execute_full_pipeline(
                 result.on_chain_verification = integrity_res
                 result.status = PipelineStatus.VERIFIED if integrity_res.verified else PipelineStatus.FAILED
             except Exception as bc_err:
-                logger.info("Live on-chain broadcast skipped (%s). Using verifiable local proof fallback.", str(bc_err))
-                from app.models.evidence_schemas import BlockchainAnchorResult, IntegrityVerificationResult
-                sim_tx = f"0x{uuid.uuid4().hex}{uuid.uuid4().hex}"
-                result.blockchain_anchoring = BlockchainAnchorResult(
-                    status="CONFIRMED",
-                    transaction_hash=sim_tx,
-                    block_number=12849102,
-                    contract_address=contract_address or "0xA7F56AE142C114fCA9bC0386CdD693e665ADF101",
-                    proof_id=f"0x{uuid.uuid4().hex}",
-                    chain_id=80002,
-                    anchored_timestamp=datetime.now(timezone.utc).isoformat(),
-                )
-                result.on_chain_verification = IntegrityVerificationResult(
-                    verified=True,
-                    proof_exists=True,
-                    on_chain_hash=fingerprint.evidence_hash,
-                    recomputed_local_hash=fingerprint.evidence_hash,
-                    timestamp=datetime.now(timezone.utc).isoformat(),
-                )
-                _log_step(steps, PipelineStatus.CONFIRMING, f"Evidence DNA anchored in Block #12849102 (Tx: {sim_tx[:18]}...).")
-                _log_step(steps, PipelineStatus.VERIFIED, "Zero-Trust integrity audit passed: On-chain digest matches local Evidence DNA 100%.")
-                result.status = PipelineStatus.VERIFIED
+                error_msg = f"Blockchain anchoring failed: {str(bc_err)}"
+                logger.error(error_msg)
+                _log_step(steps, PipelineStatus.FAILED, error_msg)
+                result.status = PipelineStatus.FAILED
+                result.error = error_msg
+                return result
         else:
             # Completed up to off-chain fingerprint verification
             _log_step(steps, PipelineStatus.FINGERPRINTING, "Pipeline complete up to Evidence DNA fingerprinting (blockchain anchoring not requested).")
-            result.status = PipelineStatus.VERIFIED
+            result.status = PipelineStatus.FINGERPRINTING
 
     except Exception as e:
         error_str = f"Pipeline execution error: {str(e)}"
