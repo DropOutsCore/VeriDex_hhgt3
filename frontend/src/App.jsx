@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from './components/TopBar';
-import PipelineRail, { PIPELINE_STAGES } from './components/PipelineRail';
+import PipelineChevronNav from './components/PipelineChevronNav';
+import FarLeftNavStrip from './components/FarLeftNavStrip';
+import PipelineRail from './components/PipelineRail';
 import RightForensicPanel from './components/RightForensicPanel';
 import ForensicConsole from './components/ForensicConsole';
 
@@ -23,12 +25,13 @@ export default function App() {
   const [pipelineResult, setPipelineResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState('IDLE');
-  const [activeStageId, setActiveStageId] = useState(3);
+  const [activeStageId, setActiveStageId] = useState(4);
   const [isTampered, setIsTampered] = useState(false);
   const [rawImageSrc, setRawImageSrc] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [farLeftTab, setFarLeftTab] = useState('timeline');
 
   useEffect(() => {
     async function initHealthCheck() {
@@ -80,7 +83,7 @@ export default function App() {
       const res = await runPipeline(file, true);
       setPipelineResult(res);
       setCurrentStatus(res.status || 'VERIFIED');
-      setActiveStageId(3);
+      setActiveStageId(4);
     } catch (err) {
       console.error('Pipeline execution error:', err);
       setErrorMsg(err.message || 'Pipeline execution failed.');
@@ -192,7 +195,7 @@ export default function App() {
   return (
     <div className="h-screen max-h-screen overflow-hidden flex flex-col forensic-workspace-bg text-white select-none">
       
-      {/* Top Header Bar */}
+      {/* 1. Top Header Bar */}
       <TopBar
         isHealthy={isHealthy}
         sessionId={sessionId}
@@ -203,9 +206,24 @@ export default function App() {
         hasPipelineResult={Boolean(pipelineResult)}
       />
 
-      {/* Main 3-Column Workstation Body */}
+      {/* 2. Top Horizontal Chevron Stepper Navigation Bar (Reference UI Feature) */}
+      <PipelineChevronNav
+        currentStatus={currentStatus}
+        activeStageId={activeStageId}
+        onSelectStage={setActiveStageId}
+        steps={pipelineResult?.steps || []}
+        isTampered={isTampered}
+      />
+
+      {/* 3. Main Multi-Column Workstation Body */}
       <div className="flex flex-1 overflow-hidden relative">
         
+        {/* Far-Left Icon Navigation Strip */}
+        <FarLeftNavStrip
+          activeTab={farLeftTab}
+          onSelectTab={setFarLeftTab}
+        />
+
         {/* Left Forensic Pipeline Rail */}
         <PipelineRail
           currentStatus={currentStatus}
@@ -215,7 +233,7 @@ export default function App() {
           isTampered={isTampered}
         />
 
-        {/* Center Main Investigation Area */}
+        {/* Center Main Investigation Workspace Area */}
         <main className="flex-1 overflow-y-auto scrollbar-thin flex flex-col p-5 gap-4">
           
           {errorMsg && (
@@ -241,13 +259,13 @@ export default function App() {
 
       </div>
 
-      {/* Streaming Audit Log Bar */}
+      {/* 4. Streaming Audit Log Bar */}
       <ForensicConsole
         logs={logs}
         onClearLogs={() => setLogs([])}
       />
 
-      {/* Summary Dossier Modal */}
+      {/* 5. Summary Dossier Modal */}
       <SummaryModal
         isOpen={showSummary}
         onClose={() => setShowSummary(false)}
