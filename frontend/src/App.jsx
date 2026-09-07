@@ -133,6 +133,27 @@ export default function App() {
     addLog('INFO', 'Session reset. Ready for new evidence payload ingestion.');
   };
 
+  // Clear error when user manually switches stages
+  const handleSelectStage = (stageId) => {
+    setErrorMsg(null);
+    setActiveStageId(stageId);
+  };
+
+  // Direct JSON download of the pipeline result
+  const handleExportDossier = () => {
+    if (!pipelineResult) {
+      handleRunSampleDemo();
+      return;
+    }
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pipelineResult, null, 2));
+    const a = document.createElement('a');
+    a.setAttribute('href', dataStr);
+    a.setAttribute('download', `veridex-evidence-dossier-${sessionId}.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
   const renderActiveStageScreen = () => {
     switch (activeStageId) {
       case 1:
@@ -210,6 +231,7 @@ export default function App() {
         isLoading={isLoading}
         onOpenSummary={() => setShowSummary(true)}
         onOpenSettings={() => setShowSettings(true)}
+        onExportDossier={handleExportDossier}
         hasPipelineResult={Boolean(pipelineResult)}
       />
 
@@ -217,7 +239,7 @@ export default function App() {
       <PipelineChevronNav
         currentStatus={currentStatus}
         activeStageId={activeStageId}
-        onSelectStage={setActiveStageId}
+        onSelectStage={handleSelectStage}
         steps={pipelineResult?.steps || []}
         isTampered={isTampered}
       />
@@ -229,7 +251,7 @@ export default function App() {
         <PipelineRail
           currentStatus={currentStatus}
           activeStageId={activeStageId}
-          onSelectStage={setActiveStageId}
+          onSelectStage={handleSelectStage}
           steps={pipelineResult?.steps || []}
           isTampered={isTampered}
         />

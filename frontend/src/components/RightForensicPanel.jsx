@@ -123,7 +123,10 @@ export default function RightForensicPanel({ pipelineResult, onTamperStateChange
   const bc           = pipelineResult?.blockchain_anchoring;
   const txHash       = bc?.transaction_hash || '0x8f2b7194819c9284ba0182746193850182947192847192847192847192847192';
   const blockNum     = bc?.block_number || '12849102';
-  const explorerUrl  = `https://amoy.polygonscan.com/tx/${txHash}`;
+  const contractAddress = '0xA7F56AE142C114fCA9bC0386CdD693e665ADF101';
+  // Always link to the contract registry page (always resolves) instead of a simulated tx hash
+  const explorerUrl  = `https://amoy.polygonscan.com/address/${contractAddress}`;
+
 
   const candidates   = pipelineResult?.search_response?.candidates || [
     { title: 'Wikimedia Commons Verified Source', source: 'wikimedia.org', match_type: 'exact', rank: 1 },

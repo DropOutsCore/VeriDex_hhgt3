@@ -10,10 +10,13 @@ export default function TopBar({
   isLoading,
   onOpenSummary,
   onOpenSettings,
+  onExportDossier,
   hasPipelineResult,
 }) {
   const handleExportClick = () => {
-    if (hasPipelineResult) {
+    if (onExportDossier) {
+      onExportDossier();
+    } else if (hasPipelineResult) {
       onOpenSummary();
     } else {
       onRunDemo();
