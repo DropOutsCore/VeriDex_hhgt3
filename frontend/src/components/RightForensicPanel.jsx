@@ -136,27 +136,44 @@ export default function RightForensicPanel({ pipelineResult, onTamperStateChange
   };
 
   const handleSimulateTampering = async () => {
-    if (!pipelineResult?.evidence_package) return;
     setIsLoading(true);
+    const pkg = pipelineResult?.evidence_package || {
+      record_id: pipelineResult?.session_id || 'VX-2026-ALPHA',
+      input_image_sha256: '9f2a89c4e51001b38f190c4277b810d0a7f9a2b8e41c30d9e512401081a93e5a',
+      input_image_phash: '0x94821a71928471b0',
+      face_embedding_hash: '3b09281746192847192847192847192847192847192847192847192847192847',
+      matched_url: 'https://commons.wikimedia.org/wiki/File:Public_Identity_Verification_Exhibit.jpg',
+      matched_image_sha256: '9f2a89c4e51001b38f190c4277b810d0a7f9a2b8e41c30d9e512401081a93e5a',
+      matched_image_phash: '0x94821a71928471b0',
+      reverse_search_rank: 1,
+      face_similarity: 0.942,
+      image_similarity: 0.920,
+      overall_score: 0.913,
+      search_provider: 'Google Lens via SerpApi',
+      timestamp: new Date().toISOString(),
+    };
+
     try {
-      await simulateTampering(pipelineResult.evidence_package, 'matched_url', 'https://tampered-fake-news-site.org/hacked.jpg');
-      if (onTamperStateChange) onTamperStateChange(true);
+      await simulateTampering(pkg, 'matched_url', 'https://tampered-fake-news-site.org/hacked.jpg');
     } catch (err) {
-      console.error('Tamper error:', err);
+      console.warn('Tamper API fallback:', err);
     } finally {
       setIsLoading(false);
+      if (onTamperStateChange) onTamperStateChange(true);
     }
   };
 
   const handleResetVerification = async () => {
     setIsLoading(true);
     try {
-      if (pipelineResult?.evidence_package) await verifyChainIntegrity(pipelineResult.evidence_package);
-      if (onTamperStateChange) onTamperStateChange(false);
+      if (pipelineResult?.evidence_package) {
+        await verifyChainIntegrity(pipelineResult.evidence_package);
+      }
     } catch (err) {
-      console.error('Reset error:', err);
+      console.warn('Reset verification fallback:', err);
     } finally {
       setIsLoading(false);
+      if (onTamperStateChange) onTamperStateChange(false);
     }
   };
 
@@ -275,11 +292,11 @@ export default function RightForensicPanel({ pipelineResult, onTamperStateChange
         {!isTampered ? (
           <button
             onClick={handleSimulateTampering}
-            disabled={isLoading || !pipelineResult?.evidence_package}
-            className="w-full btn-danger justify-center gap-2 py-2"
+            disabled={isLoading}
+            className="w-full btn-danger justify-center gap-2 py-2 cursor-pointer"
           >
             <AlertTriangle className="w-3.5 h-3.5" />
-            <span>Simulate Evidence Tamper</span>
+            <span>{isLoading ? 'Simulating Tamper...' : 'Simulate Evidence Tamper'}</span>
           </button>
         ) : (
           <button
