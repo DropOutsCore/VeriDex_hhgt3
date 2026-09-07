@@ -1,0 +1,27 @@
+{
+  "name": "veridex-blockchain",
+  "version": "1.0.0",
+  "description": "VERIDEX Smart Contract Registry & Polygon Amoy Anchoring Module",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:amoy": "hardhat run scripts/deploy.js --network amoy"
+  },
+  "keywords": [
+    "veridex",
+    "polygon",
+    "amoy",
+    "solidity",
+    "blockchain",
+    "evidence-anchoring"
+  ],
+  "author": "VERIDEX Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.2"
+  }
+}

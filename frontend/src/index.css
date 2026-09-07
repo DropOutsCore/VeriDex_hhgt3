@@ -1,0 +1,410 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================================
+   VERIDEX — NIVA DESIGN SYSTEM (https://niva.framer.website/)
+   Obsidian charcoal background, elevated rounded cards, 
+   warm copper/amber accents, pill badges, and Inter typography.
+   ============================================================ */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --bg-base:        #08080A;   /* deep obsidian dark */
+    --bg-panel:       #111114;   /* dark container surface */
+    --bg-card:        #16161A;   /* elevated card */
+    --bg-inset:       #0B0B0D;   /* inset sub-container */
+    --border-dim:     #222226;   /* subtle dark border */
+    --border-mid:     #2D2D34;   /* mid border */
+    --border-bright:  #3F3F4A;   /* interactive hover border */
+    --text-primary:   #FFFFFF;   /* crisp pure white */
+    --text-secondary: #A1A1AA;   /* neutral zinc 400 */
+    --text-dim:       #71717A;   /* muted zinc 500 */
+    --amber:          #D97746;   /* Niva warm copper/amber */
+    --amber-d:        #B85D2E;   /* deep amber */
+    --amber-l:        #F08B57;   /* bright copper */
+    --yellow:         #D97746;   /* alias for legacy components */
+    --yellow-d:       #B85D2E;   /* alias for legacy components */
+    --green-hi:       #4ADE80;   /* verified green */
+    --red-hi:         #F87171;   /* alert red */
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+/* ============================================================
+   WORKSPACE BACKGROUND & FLOATING HEADER
+   ============================================================ */
+.forensic-workspace-bg {
+  background-color: var(--bg-base);
+}
+
+.topbar-floating {
+  background: rgba(18, 18, 21, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================================
+   PANELS & CONTAINERS — NIVA ROUNDED CARDS
+   ============================================================ */
+.station-panel, .cyber-panel, .minimal-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.station-panel:hover, .minimal-card:hover {
+  border-color: var(--border-mid);
+}
+
+.station-panel-active {
+  background: var(--bg-card);
+  border: 1px solid rgba(217, 119, 70, 0.4);
+}
+
+.station-panel-alert {
+  background: #180B0B;
+  border: 1px solid var(--red-hi);
+}
+
+/* ============================================================
+   PILL BADGE / LABEL SYSTEM — NIVA STYLE
+   ============================================================ */
+.badge-niva {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--text-secondary);
+}
+
+.badge-amber, .badge-yellow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--amber);
+  border: 1px solid rgba(217, 119, 70, 0.3);
+  background: rgba(217, 119, 70, 0.1);
+}
+
+.badge-green {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--green-hi);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.badge-red {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--red-hi);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.badge-dim {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-dim);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Legacy maps */
+.badge-intel   { @apply badge-dim; }
+.badge-emerald { @apply badge-green; }
+.badge-cyan    { @apply badge-amber; }
+.badge-rose    { @apply badge-red; }
+
+/* ============================================================
+   PIPELINE STAGE ITEMS
+   ============================================================ */
+.stage-item {
+  padding: 9px 12px;
+  border: 1px solid var(--border-dim);
+  background: var(--bg-panel);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.stage-item:hover { 
+  border-color: var(--border-mid); 
+  background: var(--bg-card); 
+}
+.stage-item.active { 
+  border-color: rgba(217, 119, 70, 0.5); 
+  background: var(--bg-card); 
+}
+
+/* ============================================================
+   BUTTONS — NIVA SLEEK PILL BUTTONS
+   ============================================================ */
+.btn-primary {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 7px 18px;
+  background: var(--amber);
+  color: #08080A;
+  border: 1px solid var(--amber);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-primary:hover { 
+  background: var(--amber-l); 
+  border-color: var(--amber-l);
+  box-shadow: 0 0 16px rgba(217, 119, 70, 0.35);
+}
+.btn-primary:disabled { 
+  opacity: 0.4; 
+  cursor: not-allowed; 
+  box-shadow: none;
+}
+
+.btn-secondary {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  border: 1px solid var(--border-mid);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-secondary:hover { 
+  color: #FFFFFF; 
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-bright); 
+}
+
+.btn-danger {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 6px 14px;
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--red-hi);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-danger:hover { 
+  background: rgba(248, 113, 113, 0.16); 
+  border-color: var(--red-hi);
+}
+
+/* ============================================================
+   PROGRESS BARS — SMOOTH ROUNDED TRACKS
+   ============================================================ */
+.bar-track {
+  height: 4px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-dim);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.bar-fill-green  { height: 100%; background: var(--green-hi); border-radius: 9999px; }
+.bar-fill-yellow, .bar-fill-amber { height: 100%; background: var(--amber); border-radius: 9999px; }
+.bar-fill-red    { height: 100%; background: var(--red-hi); border-radius: 9999px; }
+
+/* ============================================================
+   HASH / CODE BLOCKS
+   ============================================================ */
+.hash-block {
+  font-family: 'Inter', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 8px 10px;
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   STATUS DOTS
+   ============================================================ */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+}
+.status-dot.online   { background: var(--green-hi); }
+.status-dot.active   { background: var(--amber); animation: pulse-dot 1.4s infinite; }
+.status-dot.error    { background: var(--red-hi); }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ============================================================
+   TAMPER STATE
+   ============================================================ */
+@keyframes tamper-blink {
+  0%, 100% { border-color: var(--red-hi); }
+  50%       { border-color: transparent; }
+}
+.tamper-alert { animation: tamper-blink 0.9s ease-in-out infinite; }
+
+/* ============================================================
+   CUSTOM SCROLLBARS
+   ============================================================ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-inset); }
+::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+
+/* ============================================================
+   GLOBAL THEME OVERRIDES FOR LEGACY TAILWIND CLASSES
+   Maps all cyan/blue/slate classes to Niva design system.
+   ============================================================ */
+
+/* Cyan -> Amber */
+.text-cyan-300, .text-cyan-400, .text-cyan-500 { color: var(--amber) !important; }
+.border-cyan-500, .border-cyan-400, .border-cyan-800,
+.border-cyan-500\/80, .border-cyan-500\/50, .border-cyan-800\/60 { border-color: rgba(217, 119, 70, 0.4) !important; }
+.bg-cyan-950, .bg-cyan-950\/80, .bg-cyan-950\/60 { background-color: rgba(217, 119, 70, 0.08) !important; }
+
+/* Emerald -> Green-hi */
+.text-emerald-400, .text-emerald-300 { color: var(--green-hi) !important; }
+.border-emerald-400, .border-emerald-700, .border-emerald-800 { border-color: rgba(74, 222, 128, 0.3) !important; }
+.bg-emerald-950, .bg-emerald-950\/80, .bg-emerald-950\/20 { background-color: rgba(74, 222, 128, 0.08) !important; }
+
+/* Rose -> Red-hi */
+.text-rose-400, .text-rose-300 { color: var(--red-hi) !important; }
+.border-rose-800, .border-rose-700 { border-color: rgba(248, 113, 113, 0.3) !important; }
+.bg-rose-950, .bg-rose-950\/80, .bg-rose-950\/30 { background-color: rgba(248, 113, 113, 0.08) !important; }
+
+/* Amber */
+.text-amber-400, .text-amber-300 { color: var(--amber) !important; }
+.border-amber-700, .border-amber-500\/80, .border-amber-500\/50 { border-color: rgba(217, 119, 70, 0.4) !important; }
+.bg-amber-950, .bg-amber-950\/80 { background-color: rgba(217, 119, 70, 0.08) !important; }
+
+/* Slate -> Text-secondary */
+.text-slate-100, .text-slate-200 { color: var(--text-primary) !important; }
+.text-slate-300, .text-slate-400 { color: var(--text-secondary) !important; }
+.text-slate-500 { color: var(--text-dim) !important; }
+
+/* Dark panel backgrounds -> Niva surface */
+.bg-\[\#090E17\], .bg-\[\#070B12\], .bg-\[\#080D17\],
+.bg-\[\#0E1626\], .bg-\[\#121D33\], .bg-\[\#05080E\],
+.bg-\[\#04060A\], .bg-\[\#07110D\], .bg-\[\#0D1C15\],
+.bg-\[\#0F1E14\], .bg-\[\#141A0A\], .bg-\[\#06100A\] { background-color: var(--bg-panel) !important; }
+
+.bg-\[\#07100B\], .bg-\[\#040906\] { background-color: var(--bg-inset) !important; }
+
+/* Borders -> Niva borders */
+.border-\[\#1C2B42\], .border-\[\#292D30\], .border-\[\#1B3326\],
+.border-\[\#264D38\], .border-\[\#0D1A10\] { border-color: var(--border-dim) !important; }
+
+/* Purple -> dim */
+.text-purple-300, .text-purple-400 { color: var(--text-secondary) !important; }
+.border-purple-800 { border-color: var(--border-dim) !important; }
+.bg-purple-950 { background-color: var(--bg-inset) !important; }
+
+/* Blue CTA buttons -> Amber */
+.bg-blue-600, .bg-blue-500 { 
+  background-color: var(--amber) !important; 
+  border-color: var(--amber) !important; 
+  color: #08080A !important; 
+}
+.hover\:bg-blue-500:hover { 
+  background-color: var(--amber-l) !important; 
+}
+
+/* Stage panel backgrounds and borders */
+.bg-slate-900, .bg-slate-900\/40, .bg-slate-900\/60,
+.bg-slate-950, .bg-slate-950\/80, .bg-slate-800 {
+  background-color: var(--bg-panel) !important;
+}
+
+.border-slate-800, .border-slate-800\/60, .border-slate-700 {
+  border-color: var(--border-dim) !important;
+}
+.border-slate-600 { 
+  border-color: var(--border-mid) !important; 
+}
+
+/* Force Inter Font universally */
+*, .font-mono, .font-sans { 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; 
+}
