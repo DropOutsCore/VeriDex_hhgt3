@@ -1,10 +1,21 @@
 import React, { useRef, useState } from 'react';
-import { Upload, CheckCircle2, Scan, Eye, Activity, Crosshair, Sparkles, Sliders, ShieldCheck } from 'lucide-react';
+import { Upload, CheckCircle2, Scan, Eye, EyeOff, RotateCcw, Activity, Crosshair, Sliders, ShieldCheck } from 'lucide-react';
 
 export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, rawImageSrc }) {
   const fileInputRef = useRef(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [showWireframe, setShowWireframe] = useState(true);
+  const [isRetriangulating, setIsRetriangulating] = useState(false);
+  const [triangulationKey, setTriangulationKey] = useState(0);
+
+  const handleRetriangulate = () => {
+    setIsRetriangulating(true);
+    setShowWireframe(true);
+    setTriangulationKey((prev) => prev + 1);
+    setTimeout(() => {
+      setIsRetriangulating(false);
+    }, 700);
+  };
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -90,14 +101,37 @@ export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, raw
 
         {hasResult && (
           <div className="flex items-center gap-2">
+            {/* Toggle Hide / Show Triangulation */}
             <button
               onClick={() => setShowWireframe(!showWireframe)}
-              className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-b from-[#181822] to-[#101016] hover:from-[#20202C] hover:to-[#14141E] border border-white/10 hover:border-white/20 text-zinc-300 hover:text-white transition-all duration-200 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
+              title={showWireframe ? 'Hide facial landmark triangulation wireframe and pins' : 'Show facial landmark triangulation wireframe and pins'}
             >
-              <Crosshair className="w-3 h-3 text-[#D97746]" />
-              <span>{showWireframe ? 'Hide Triangulation' : 'Show Triangulation'}</span>
+              {showWireframe ? (
+                <>
+                  <EyeOff className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>Hide Triangulation</span>
+                </>
+              ) : (
+                <>
+                  <Eye className="w-3.5 h-3.5 text-[#38BDF8]" />
+                  <span>Show Triangulation</span>
+                </>
+              )}
             </button>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4ADE80]/10 border border-[#4ADE80]/25 text-[#4ADE80] text-xs font-semibold">
+
+            {/* Re-triangulate Action */}
+            <button
+              onClick={handleRetriangulate}
+              disabled={isRetriangulating}
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-b from-[#1F1F2A] to-[#12121A] hover:from-[#262634] hover:to-[#171720] border border-[#D97746]/40 hover:border-[#D97746]/70 text-[#D97746] hover:text-[#FFAE80] transition-all duration-200 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm disabled:opacity-50"
+              title="Re-compute YuNet 5-Point Affine Landmark Triangulation Mesh"
+            >
+              <RotateCcw className={`w-3.5 h-3.5 ${isRetriangulating ? 'animate-spin text-[#FFAE80]' : ''}`} />
+              <span>{isRetriangulating ? 'Re-triangulating...' : 'Re-triangulate'}</span>
+            </button>
+
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#10B981]/10 border border-[#10B981]/30 text-[#10B981] text-xs font-mono font-bold">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>Face Detected ({confidence}%)</span>
             </div>
@@ -156,6 +190,14 @@ export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, raw
                 className="w-full h-full object-contain"
               />
 
+              {/* Active Re-triangulation Laser Sweep */}
+              {isRetriangulating && (
+                <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
+                  <div className="animate-scanner-sweep h-1 bg-gradient-to-r from-transparent via-[#38BDF8] to-transparent shadow-[0_0_12px_#38BDF8]" />
+                  <div className="absolute inset-0 bg-[#38BDF8]/10 animate-pulse" />
+                </div>
+              )}
+
               {/* Bounding Box Reticle */}
               {hasResult && (
                 <div
@@ -170,7 +212,7 @@ export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, raw
 
               {/* Landmark Triangulation SVG Wireframe */}
               {hasResult && showWireframe && (
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+                <svg key={`wireframe-${triangulationKey}`} className={`absolute inset-0 w-full h-full pointer-events-none z-10 transition-opacity duration-300 ${isRetriangulating ? 'opacity-40' : 'opacity-100'}`}>
                   {/* Eye-to-Eye Baseline */}
                   <line
                     x1={`${lmPoints.rightEye.x}%`}
@@ -241,8 +283,8 @@ export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, raw
               )}
 
               {/* 5-Point Landmark Visual Pins */}
-              {hasResult && (
-                <>
+              {hasResult && showWireframe && (
+                <React.Fragment key={`pins-${triangulationKey}`}>
                   {/* Right Eye */}
                   <div
                     className="absolute -translate-x-1/2 -translate-y-1/2 z-20 group pointer-events-none"
@@ -297,7 +339,7 @@ export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, raw
                       L. MOUTH
                     </span>
                   </div>
-                </>
+                </React.Fragment>
               )}
             </div>
 

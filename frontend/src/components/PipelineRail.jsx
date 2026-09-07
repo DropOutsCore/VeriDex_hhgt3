@@ -104,9 +104,9 @@ export default function PipelineRail({
   };
 
   return (
-    <aside className="w-64 bg-[#0A0A0D] border-r border-[#222226] flex flex-col h-full shrink-0 overflow-y-auto select-none">
+    <aside className="w-64 bg-[#0A0A0D] border-r border-[#222226] flex flex-col h-full shrink-0 overflow-hidden select-none">
       {/* Header */}
-      <div className="p-4 border-b border-[#222226]">
+      <div className="p-4 border-b border-[#222226] shrink-0">
         <div className="flex items-center justify-between mb-1">
           <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">
             Investigation Flow
@@ -165,8 +165,8 @@ export default function PipelineRail({
         })}
       </div>
 
-      {/* System Status Footer */}
-      <div className="p-4 border-t border-[#222226] bg-[#0C0C0F]">
+      {/* System Status Footer (Pinned firmly at bottom) */}
+      <div className="p-4 mt-auto border-t border-[#222226] bg-[#0C0C0F] shrink-0">
         <div className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase mb-2">
           Environment
         </div>
