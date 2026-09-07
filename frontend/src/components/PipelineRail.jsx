@@ -164,33 +164,30 @@ export default function PipelineRail({
           );
         })}
       </div>
-
-      {/* System Status Footer (Pinned firmly at bottom) */}
-      <div className="p-4 mt-auto border-t border-[#222226] bg-[#0C0C0F] shrink-0">
-        <div className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase mb-2">
-          Environment
-        </div>
-        <div className="space-y-1.5 text-[11px] text-zinc-400">
-          <div className="flex items-center justify-between">
-            <span className="text-zinc-500">Engine</span>
-            <span className="text-zinc-300 font-medium">YuNet + SFace</span>
+    <div className="p-2 mt-auto border-t border-[#222226] bg-[#0C0C0F] shrink-0 text-xs">
+          <div className="text-[9px] font-semibold tracking-wider text-zinc-500 uppercase mb-1">
+            Environment
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-zinc-500">Hash Standard</span>
-            <span className="text-zinc-300 font-medium">RFC 8785 SHA-256</span>
+          <div className="space-y-0.5 text-[9px] text-zinc-400">
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-500">Engine</span>
+              <span className="text-zinc-300 font-medium">YuNet + SFace</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-500">Hash Standard</span>
+              <span className="text-zinc-300 font-medium">RFC 8785 SHA-256</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-500">Chain Network</span>
+              <span className="text-[#D97746] font-medium">Amoy 80002</span>
+            </div>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-zinc-500">Chain Network</span>
-            <span className="text-[#D97746] font-medium">Amoy 80002</span>
+          <div className="mt-2 pt-1 border-t border-[#222226] text-center">
+            <span className="text-[9px] text-zinc-500 font-medium">
+              Made by <span className="text-[#D97746] font-semibold">Team Dropouts</span>
+            </span>
           </div>
         </div>
-
-        <div className="mt-3 pt-2.5 border-t border-[#222226] text-center">
-          <span className="text-[10px] text-zinc-500 font-medium">
-            Made by <span className="text-[#D97746] font-semibold">Team Dropouts</span>
-          </span>
-        </div>
-      </div>
-    </aside>
+</aside>
   );
 }

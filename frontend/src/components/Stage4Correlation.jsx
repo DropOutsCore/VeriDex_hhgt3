@@ -222,14 +222,14 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
             
             {/* SVG Link Edges */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <line x1="50%" y1="50%" x2="25%" y2="25%" stroke="#38BDF8" strokeWidth="1.5" opacity="0.6" />
-              <line x1="50%" y1="50%" x2="75%" y2="25%" stroke="#10B981" strokeWidth="2" />
-              <line x1="50%" y1="50%" x2="25%" y2="75%" stroke="#38BDF8" strokeWidth="1.5" opacity="0.6" />
-              <line x1="50%" y1="50%" x2="75%" y2="75%" stroke="#D97746" strokeWidth="1.5" opacity="0.6" />
+              <line x1="50%" y1="50%" x2="25%" y2="25%" className="stroke-[#38BDF8] animate-dash" strokeWidth="1.5" opacity="0.6" />
+              <line x1="50%" y1="50%" x2="75%" y2="25%" className="stroke-[#10B981] animate-dash" strokeWidth="2" />
+              <line x1="50%" y1="50%" x2="25%" y2="75%" className="stroke-[#38BDF8] animate-dash" strokeWidth="1.5" opacity="0.6" />
+              <line x1="50%" y1="50%" x2="75%" y2="75%" className="stroke-[#D97746] animate-dash" strokeWidth="1.5" opacity="0.6" />
             </svg>
 
             {/* Central Target Node */}
-            <div className="z-10 flex flex-col items-center group cursor-pointer">
+            <div className="z-10 flex flex-col items-center group cursor-pointer animate-pulse-glow">
               <div className="w-16 h-16 rounded-xl bg-[#181820] border-2 border-[#10B981] p-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform">
                 <img src={rawImageSrc || '/single_face.jpg'} alt="Node Target" className="w-full h-full object-cover rounded-lg" />
               </div>
@@ -239,7 +239,7 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
             </div>
 
             {/* Satellite Node 1: Face Signature */}
-            <div className="absolute top-6 left-12 z-10 flex flex-col items-center group cursor-pointer">
+            <div className="absolute top-6 left-12 z-10 flex flex-col items-center group cursor-pointer animate-float">
               <div className="w-10 h-10 rounded-lg bg-[#141419] border border-[#38BDF8]/50 flex items-center justify-center text-[#38BDF8] group-hover:scale-110 transition-transform">
                 <Cpu className="w-5 h-5" />
               </div>
@@ -247,7 +247,7 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
             </div>
 
             {/* Satellite Node 2: Web Discovered Image */}
-            <div className="absolute top-6 right-12 z-10 flex flex-col items-center group cursor-pointer">
+            <div className="absolute top-6 right-12 z-10 flex flex-col items-center group cursor-pointer animate-float-delayed">
               <div className="w-10 h-10 rounded-lg bg-[#141419] border-2 border-[#10B981] overflow-hidden group-hover:scale-110 transition-transform">
                 <img src={candidateUrl} alt="Satellite Candidate" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/single_face.jpg'; }} />
               </div>
@@ -255,7 +255,7 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
             </div>
 
             {/* Satellite Node 3: Polygon Amoy Hash */}
-            <div className="absolute bottom-6 left-12 z-10 flex flex-col items-center group cursor-pointer">
+            <div className="absolute bottom-6 left-12 z-10 flex flex-col items-center group cursor-pointer animate-float-delayed">
               <div className="w-10 h-10 rounded-lg bg-[#141419] border border-[#38BDF8]/50 flex items-center justify-center text-[#38BDF8] group-hover:scale-110 transition-transform">
                 <Activity className="w-5 h-5" />
               </div>
@@ -263,7 +263,7 @@ export default function Stage4Correlation({ verifiedCandidate, faceDetectionData
             </div>
 
             {/* Satellite Node 4: Dataset Anchor */}
-            <div className="absolute bottom-6 right-12 z-10 flex flex-col items-center group cursor-pointer">
+            <div className="absolute bottom-6 right-12 z-10 flex flex-col items-center group cursor-pointer animate-float">
               <div className="w-10 h-10 rounded-lg bg-[#141419] border border-[#D97746]/50 flex items-center justify-center text-[#D97746] group-hover:scale-110 transition-transform">
                 <Sliders className="w-5 h-5" />
               </div>
