@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitCompare, Scan, CheckCircle2, ShieldAlert, Sparkles } from 'lucide-react';
+import { GitCompare, Scan, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 export default function Stage4Correlation({ verifiedCandidate, faceDetectionData, rawImageSrc }) {
   const faceSim = verifiedCandidate?.face_similarity !== undefined ? (verifiedCandidate.face_similarity * 100).toFixed(1) : '91.4';

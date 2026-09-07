@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, Shield, Download, Sparkles, Activity } from 'lucide-react';
+import { Database, Shield, Download, Play, Activity } from 'lucide-react';
 
 export default function TopBar({ 
   isHealthy, 
@@ -95,6 +95,7 @@ export default function TopBar({
           <button 
             onClick={onOpenSummary} 
             className="btn-secondary"
+            title="Export Evidence Verification Dossier"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Dossier</span>
@@ -105,8 +106,9 @@ export default function TopBar({
           onClick={onRunDemo} 
           disabled={isLoading} 
           className="btn-primary"
+          title="Execute Full 8-Stage Forensic Pipeline"
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Play className="w-3.5 h-3.5 fill-current" />
           <span>{isLoading ? 'Processing Pipeline...' : 'Run Audit'}</span>
         </button>
       </div>

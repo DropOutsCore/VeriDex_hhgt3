@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ExternalLink, Check, ChevronLeft, ChevronRight, Filter, Globe, Sparkles } from 'lucide-react';
+import { Search, ExternalLink, Check, ChevronLeft, ChevronRight, Filter, Globe } from 'lucide-react';
 
 export default function Stage3ReverseTrace({ searchResponse, verifiedCandidate, rawImageSrc }) {
   const [activeTab, setActiveTab] = useState('ALL');

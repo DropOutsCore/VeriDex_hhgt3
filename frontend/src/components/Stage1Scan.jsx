@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Upload, CheckCircle2, Scan, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Upload, CheckCircle2, Scan, Image as ImageIcon } from 'lucide-react';
 
 export default function Stage1Scan({ onUpload, isLoading, faceDetectionData, rawImageSrc }) {
   const fileInputRef = useRef(null);
