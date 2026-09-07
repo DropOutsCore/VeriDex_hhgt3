@@ -221,7 +221,11 @@ export default function App() {
         {/* Far-Left Icon Navigation Strip */}
         <FarLeftNavStrip
           activeTab={farLeftTab}
-          onSelectTab={setFarLeftTab}
+          onSelectTab={(tabId) => {
+            setFarLeftTab(tabId);
+            if (tabId === 'dossier' && pipelineResult) setShowSummary(true);
+            if (tabId === 'settings') handleResetSession();
+          }}
         />
 
         {/* Left Forensic Pipeline Rail */}
@@ -234,7 +238,7 @@ export default function App() {
         />
 
         {/* Center Main Investigation Workspace Area */}
-        <main className="flex-1 overflow-y-auto scrollbar-thin flex flex-col p-5 gap-4">
+        <main className="flex-1 overflow-y-auto scrollbar-thin parallax-container flex flex-col p-5 gap-4">
           
           {errorMsg && (
             <div className="p-3 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 text-[#F87171] text-xs flex items-center gap-2.5">
@@ -243,8 +247,8 @@ export default function App() {
             </div>
           )}
 
-          {/* Dynamic Active Stage Screen Render */}
-          <div className="flex-1">
+          {/* Dynamic Active Stage Screen Render with view transition */}
+          <div key={activeStageId} className="flex-1 view-fade-in">
             {renderActiveStageScreen()}
           </div>
 

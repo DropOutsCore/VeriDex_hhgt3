@@ -485,3 +485,48 @@
   transform: translateY(-1px);
 }
 
+/* ============================================================
+   MINIMALIST TRANSITIONS & PARALLAX SCROLL EFFECTS
+   ============================================================ */
+.parallax-container {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.parallax-layer-back {
+  transform: translateZ(-20px) scale(1.05);
+  transition: transform 0.3s ease-out;
+}
+
+.parallax-layer-base {
+  transform: translateZ(0);
+}
+
+.minimal-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.minimal-lift:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
+}
+
+.view-fade-in {
+  animation: viewFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
