@@ -83,7 +83,13 @@ export default function App() {
       const res = await runPipeline(file, true);
       setPipelineResult(res);
       setCurrentStatus(res.status || 'VERIFIED');
-      setActiveStageId(4);
+
+      // Animate through all 8 stages sequentially so each stage lights up
+      const stageDelay = 350; // ms between each stage transition
+      for (let stage = 1; stage <= 8; stage++) {
+        await new Promise(resolve => setTimeout(resolve, stageDelay));
+        setActiveStageId(stage);
+      }
     } catch (err) {
       console.error('Pipeline execution error:', err);
       setErrorMsg(err.message || 'Pipeline execution failed.');
