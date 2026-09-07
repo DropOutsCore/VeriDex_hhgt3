@@ -110,6 +110,13 @@ export default function SummaryModal({ isOpen, onClose, pipelineResult, onSelect
 
         </div>
 
+        {/* Modal Footer Attribution */}
+        <div className="text-center pt-1 border-t border-[#222226]">
+          <span className="text-[11px] text-zinc-500 font-medium">
+            VeriDex Forensic Engine • Built by <span className="text-[#D97746] font-semibold">Team Dropouts</span>
+          </span>
+        </div>
+
       </div>
     </div>
   );

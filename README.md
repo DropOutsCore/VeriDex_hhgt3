@@ -165,3 +165,17 @@ VERIDEX does not store private user biometrics in clear text. All 128-D facial e
 ## 10. License
 
 Licensed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+### 🛡️ VERIDEX — Zero-Trust Visual Evidence Forensic Verification Engine
+
+Made with ❤️ by **Team Dropouts**
+
+[![GitHub](https://img.shields.io/badge/GitHub-DropOutsCore-181717?style=flat&logo=github&logoColor=white)](https://github.com/DropOutsCore)
+[![Polygon](https://img.shields.io/badge/Polygon-Amoy%2080002-8247E5?style=flat&logo=polygon&logoColor=white)](https://amoy.polygonscan.com/address/0xA7F56AE142C114fCA9bC0386CdD693e665ADF101)
+
+</div>
+

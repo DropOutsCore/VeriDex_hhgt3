@@ -184,6 +184,12 @@ export default function PipelineRail({
             <span className="text-[#D97746] font-medium">Amoy 80002</span>
           </div>
         </div>
+
+        <div className="mt-3 pt-2.5 border-t border-[#222226] text-center">
+          <span className="text-[10px] text-zinc-500 font-medium">
+            Made by <span className="text-[#D97746] font-semibold">Team Dropouts</span>
+          </span>
+        </div>
       </div>
     </aside>
   );

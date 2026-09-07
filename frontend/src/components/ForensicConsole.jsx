@@ -95,7 +95,12 @@ export default function ForensicConsole({ logs = [], onClearLogs }) {
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="hidden md:flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-zinc-400 font-medium">
+            <span>Made by</span>
+            <span className="text-[#D97746] font-semibold">Team Dropouts</span>
+          </div>
+
           <span className="text-[10px] text-zinc-500 font-medium hidden sm:inline">
             {activeLogs.length} events
           </span>
