@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Shield, Play, Download, Activity, Database, CheckCircle2, User } from 'lucide-react';
 
 export default function TopBar({
@@ -10,18 +10,6 @@ export default function TopBar({
   onOpenSummary,
   hasPipelineResult,
 }) {
-  const [timeStr, setTimeStr] = useState('');
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setTimeStr(now.toUTCString().replace('GMT', 'UTC'));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   const isVerified = activeStatus === 'VERIFIED';
   const isFailed = activeStatus === 'FAILED';
   const isRunning = !['IDLE', 'VERIFIED', 'FAILED'].includes(activeStatus);
@@ -57,8 +45,6 @@ export default function TopBar({
             <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
             SECURE
           </span>
-          <span className="text-zinc-600">|</span>
-          <span className="text-zinc-400">{timeStr || '08 SEP 2026 00:26:00 UTC'}</span>
         </div>
 
         {/* Action Buttons */}
