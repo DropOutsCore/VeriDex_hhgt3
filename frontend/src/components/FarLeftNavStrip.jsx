@@ -1,5 +1,6 @@
 import React from 'react';
-import { Layers, FileText, Settings, Shield } from 'lucide-react';
+import { Layers, FileText, Settings } from 'lucide-react';
+import VeriDexLogo from './VeriDexLogo';
 
 export default function FarLeftNavStrip({ activeTab = 'timeline', onSelectTab }) {
   const items = [
@@ -11,8 +12,8 @@ export default function FarLeftNavStrip({ activeTab = 'timeline', onSelectTab })
   return (
     <aside className="w-12 bg-[#08080B] border-r border-[#1E1E24] flex flex-col items-center py-3 gap-3 shrink-0 z-30 select-none">
       {/* Top Brand Mark */}
-      <div className="w-7 h-7 rounded-lg bg-[#D97746]/10 border border-[#D97746]/30 flex items-center justify-center text-[#D97746] mb-1">
-        <Shield className="w-3.5 h-3.5" />
+      <div className="w-7 h-7 rounded-lg bg-[#38BDF8]/10 border border-[#38BDF8]/30 flex items-center justify-center text-[#38BDF8] mb-1">
+        <VeriDexLogo size={18} />
       </div>
 
       {/* Minimalist Nav Items */}
